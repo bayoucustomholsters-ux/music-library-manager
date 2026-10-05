@@ -1,0 +1,110 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicLibraryManager.ViewModels"
+        x:Class="MusicLibraryManager.Views.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        Title="Settings"
+        Width="560"
+        Height="620"
+        MinWidth="480"
+        MinHeight="320"
+        MaxWidth="720"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        ShowInTaskbar="False">
+  <!--
+    DockPanel order matters: Bottom-docked Save/Close stay visible without scrolling.
+    Only the middle ScrollViewer scrolls when the list is long / the window is short.
+  -->
+  <DockPanel Margin="16" LastChildFill="True">
+    <Border DockPanel.Dock="Bottom"
+            BorderBrush="#333333"
+            BorderThickness="0,1,0,0"
+            Padding="0,12,0,0"
+            Margin="0,8,0,0">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button Content="Save" Command="{Binding SaveCommand}" Click="OnSaveClick"
+                Padding="18,8" MinWidth="96"/>
+        <Button Content="Close" Click="OnCloseClick" Padding="18,8" MinWidth="96"/>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  BringIntoViewOnFocusChange="True">
+      <StackPanel Spacing="10" Margin="0,0,8,0">
+        <TextBlock Text="Default output format"/>
+        <ComboBox SelectedIndex="{Binding FormatIndex}" HorizontalAlignment="Stretch">
+          <ComboBoxItem>MP3</ComboBoxItem>
+          <ComboBoxItem>FLAC</ComboBoxItem>
+          <ComboBoxItem>Apple Lossless (ALAC / M4A)</ComboBoxItem>
+          <ComboBoxItem>Keep original</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Text="MP3 bitrate mode"/>
+        <ComboBox SelectedIndex="{Binding BitrateModeIndex}" HorizontalAlignment="Stretch">
+          <ComboBoxItem>CBR</ComboBoxItem>
+          <ComboBoxItem>VBR</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Text="MP3 CBR bitrate (kbps)"/>
+        <NumericUpDown Value="{Binding Mp3Bitrate}" Minimum="64" Maximum="320" Increment="32"/>
+
+        <TextBlock Text="MP3 VBR quality (0=best .. 9=smallest)"/>
+        <NumericUpDown Value="{Binding VbrQuality}" Minimum="0" Maximum="9" Increment="1"/>
+
+        <TextBlock Text="Filename pattern (tokens: track, title, artist, album, year)"/>
+        <TextBox Text="{Binding FilenamePattern}"/>
+
+        <TextBlock Text="Folder pattern"/>
+        <TextBox Text="{Binding FolderPattern}"/>
+
+        <TextBlock Text="Default genre"/>
+        <TextBox Text="{Binding DefaultGenre}"/>
+
+        <TextBlock Text="ffmpeg.exe path (optional override)"/>
+        <TextBox Text="{Binding FfmpegPath}" Watermark="Leave blank to use bundled ffmpeg"/>
+
+        <CheckBox IsChecked="{Binding UseSourceFolderAsOutput}"
+                  Content="Default output folder: same as original album file"/>
+        <CheckBox IsChecked="{Binding AutoLookupOnLoad}"
+                  Content="Auto-lookup MusicBrainz metadata on load"/>
+        <CheckBox IsChecked="{Binding PreserveSourceTags}"
+                  Content="Preserve tags and cover art from source file"/>
+        <CheckBox IsChecked="{Binding SkipProcessed}" Content="Skip already processed albums"/>
+        <CheckBox IsChecked="{Binding DeleteSource}" Content="Delete source after successful split"/>
+
+        <TextBlock Text="Watch Folder" FontWeight="SemiBold" Margin="0,12,0,0"/>
+        <TextBlock Text="Path to watch (e.g. Albums To Split). Start/Stop Watch from the main window."
+                   Opacity="0.7" TextWrapping="Wrap"/>
+        <TextBox Text="{Binding WatchFolderPathEdit}" Watermark="C:\Music\Albums To Split"/>
+        <TextBlock Text="Settle delay after file stabilizes (seconds)"/>
+        <NumericUpDown Value="{Binding WatchSettleDelaySeconds}" Minimum="1" Maximum="120" Increment="1"/>
+
+        <TextBlock Text="Duplicate Finder" FontWeight="SemiBold" Margin="0,12,0,0"/>
+        <CheckBox IsChecked="{Binding DuplicateUseFilenameSimilarity}"
+                  Content="Also match by normalized filename similarity"/>
+        <TextBlock Text="Duration tolerance (seconds)"/>
+        <NumericUpDown Value="{Binding DuplicateDurationToleranceSeconds}" Minimum="0" Maximum="30" Increment="0.5"/>
+        <TextBlock Text="File size tolerance (%)"/>
+        <NumericUpDown Value="{Binding DuplicateSizeTolerancePercent}" Minimum="0" Maximum="20" Increment="0.5"/>
+
+        <TextBlock Text="AcoustID / Discogs / ReplayGain" FontWeight="SemiBold" Margin="0,16,0,0"/>
+        <TextBlock Text="AcoustID API key (free: https://acoustid.org/api)"
+                   Opacity="0.7" TextWrapping="Wrap"/>
+        <TextBox Text="{Binding AcoustIdApiKey}" PasswordChar="*" Watermark="AcoustID client API key"/>
+        <TextBlock Text="fpcalc.exe path (optional; bundled under fpcalc/ or ffmpeg/)"/>
+        <TextBox Text="{Binding FpcalcPath}" Watermark="Leave blank to use bundled fpcalc"/>
+
+        <TextBlock Text="Discogs personal access token"
+                   Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0"/>
+        <TextBox Text="{Binding DiscogsToken}" PasswordChar="*" Watermark="Discogs token"/>
+        <TextBlock Text="Discogs User-Agent"/>
+        <TextBox Text="{Binding DiscogsUserAgent}"/>
+
+        <CheckBox IsChecked="{Binding ApplyReplayGain}" Margin="0,8,0,12"
+                  Content="Apply ReplayGain tags on convert/split (default off)"/>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

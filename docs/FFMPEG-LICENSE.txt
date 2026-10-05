@@ -1,0 +1,22 @@
+FFmpeg is not part of the Music Library Manager MIT-licensed source code.
+
+This application bundles (or expects you to provide) a Windows build of FFmpeg
+(ffmpeg.exe) for audio splitting and conversion.
+
+FFmpeg is licensed under the GNU Lesser General Public License (LGPL) version 2.1
+or later, and some builds may include GPL components depending on how they were
+compiled. See:
+
+  https://ffmpeg.org/legal.html
+  https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+You may replace the bundled ffmpeg.exe with any compatible win-x64 build.
+Music Library Manager invokes ffmpeg as an external process and does not
+statically link against FFmpeg libraries.
+
+Recommended source for static Windows builds (verify checksums yourself):
+  https://www.gyan.dev/ffmpeg/builds/
+  https://github.com/BtbN/FFmpeg-Builds/releases
+
+If you redistribute this application with FFmpeg, you must comply with the
+applicable LGPL/GPL obligations for that FFmpeg binary.

@@ -1,0 +1,13 @@
+[Parsed_loudnorm_0 @ 0x7f8] 
+{
+"input_i" : "-14.52",
+"input_tp" : "-1.05",
+"input_lra" : "8.30",
+"input_thresh" : "-24.82",
+"output_i" : "-16.00",
+"output_tp" : "-1.50",
+"output_lra" : "8.20",
+"output_thresh" : "-26.20",
+"normalization_type" : "dynamic",
+"target_offset" : "1.48"
+}

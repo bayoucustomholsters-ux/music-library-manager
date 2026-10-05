@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicLibraryManager.ViewModels"
+        xmlns:models="using:MusicLibraryManager.Models"
+        x:Class="MusicLibraryManager.Views.DuplicateFinderWindow"
+        x:DataType="vm:DuplicateFinderViewModel"
+        Title="Duplicate Finder"
+        Width="780" Height="560"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,12">
+      <TextBlock Text="Duplicate Finder" FontSize="18" FontWeight="Bold"/>
+      <TextBlock Text="Scans for likely duplicate tracks by normalized artist+album+title tags, similar size+duration, and optional filename match. Quarantine moves extras to a DuplicatesQuarantine subfolder (keeps the first file in each group)."
+                 TextWrapping="Wrap" Opacity="0.75"/>
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBox Text="{Binding FolderPath}" Watermark="Folder to scan"/>
+        <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseFolderCommand}" Margin="8,0,0,0"/>
+      </Grid>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="Scan" Command="{Binding ScanCommand}" IsEnabled="{Binding !IsBusy}" Classes="accent" Padding="16,8"/>
+        <Button Content="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}" Padding="16,8"/>
+        <Button Content="Copy paths to log" Command="{Binding CopyPathsToLogCommand}" Padding="12,8"/>
+        <Button Content="Open folder" Command="{Binding OpenFolderCommand}" Padding="12,8"/>
+      </StackPanel>
+      <TextBlock Text="{Binding StatusText}" Opacity="0.85" TextWrapping="Wrap"/>
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,12,0,0">
+      <CheckBox IsChecked="{Binding ConfirmQuarantine}"
+                Content="I confirm quarantine — move extras (not the first) to DuplicatesQuarantine"/>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="Quarantine extras in selected group" Command="{Binding QuarantineSelectedCommand}" Padding="12,8"/>
+        <Button Content="Close" Click="OnCloseClick" Padding="16,8"/>
+      </StackPanel>
+    </StackPanel>
+
+    <Grid ColumnDefinitions="*,*" Margin="0">
+      <Border Grid.Column="0" Padding="8" CornerRadius="6" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,6,0">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Groups" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <ListBox ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="models:DuplicateGroup">
+                <TextBlock Text="{Binding DisplayLabel}" TextWrapping="Wrap" Margin="2"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+      <Border Grid.Column="1" Padding="8" CornerRadius="6" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="6,0,0,0">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Files in group" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <ListBox ItemsSource="{Binding SelectedGroupTracks}" SelectedItem="{Binding SelectedTrack}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="models:TrackScanInfo">
+                <StackPanel Margin="2">
+                  <TextBlock Text="{Binding FileName}" FontWeight="SemiBold"/>
+                  <TextBlock Text="{Binding Path}" Opacity="0.7" FontSize="11" TextWrapping="Wrap"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+dist/
+publish/
+**/ffmpeg.exe
+**/ffprobe.exe
+**/ffmpeg/
+tools/fpcalc/fpcalc.exe
+tools/**/*.exe
+.DS_Store
+*.log

@@ -1,0 +1,29 @@
+{
+  "pagination": { "page": 1, "pages": 1, "per_page": 15, "items": 2 },
+  "results": [
+    {
+      "id": 123456,
+      "title": "Nirvana - Nevermind",
+      "year": "1991",
+      "country": "US",
+      "genre": ["Rock"],
+      "style": ["Grunge"],
+      "format": ["CD", "Album"],
+      "label": ["DGC"],
+      "thumb": "https://example.com/thumb.jpg",
+      "resource_url": "https://api.discogs.com/releases/123456",
+      "type": "release"
+    },
+    {
+      "id": 789012,
+      "title": "Nirvana - Nevermind",
+      "year": "2011",
+      "country": "Europe",
+      "genre": ["Rock"],
+      "style": ["Grunge"],
+      "format": ["2xCD", "Album", "Reissue"],
+      "label": ["Geffen"],
+      "type": "release"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "TqvKjMu7dMliSfmVEBtrL7sBSno-",
+  "offset-count": 15,
+  "sectors": 258725,
+  "offsets": [150, 17510, 33275, 45910, 57805, 78310, 94650, 109580, 132010, 149160, 165115, 177710, 203325, 215555, 235590],
+  "releases": [
+    {
+      "id": "bbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+      "title": "Don't Give Me Names",
+      "date": "2000",
+      "country": "DE",
+      "artist-credit": [
+        { "name": "Guano Apes", "artist": { "id": "g1", "name": "Guano Apes" }, "joinphrase": "" }
+      ],
+      "media": [
+        {
+          "position": 1,
+          "format": "CD",
+          "track-count": 2,
+          "tracks": [
+            { "id": "t1", "position": 1, "number": "1", "title": "Innocent", "length": 210000 },
+            { "id": "t2", "position": 2, "number": "2", "title": "No Speech", "length": 200000 }
+          ]
+        }
+      ]
+    }
+  ]
+}

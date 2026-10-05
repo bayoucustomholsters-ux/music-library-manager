@@ -1,0 +1,139 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicLibraryManager.ViewModels"
+        xmlns:models="using:MusicLibraryManager.Models"
+        x:Class="MusicLibraryManager.Views.CdRipperWindow"
+        x:DataType="vm:CdRipperViewModel"
+        Title="CD Ripper"
+        Width="920" Height="720"
+        MinWidth="760" MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True">
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,10">
+      <TextBlock Text="CD Ripper" FontSize="20" FontWeight="Bold"/>
+      <TextBlock Text="Rip an audio CD to tagged FLAC or MP3. Windows 11 uses native CDDA (no Exact Audio Copy). Metadata is optional via MusicBrainz DiscID."
+                 TextWrapping="Wrap" Opacity="0.75"/>
+      <TextBlock Text="{Binding NoDriveMessage}" IsVisible="{Binding ShowNoDriveMessage}"
+                 TextWrapping="Wrap" Foreground="#FFCC88" FontWeight="SemiBold"/>
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,10,0,0">
+      <Grid ColumnDefinitions="*,Auto">
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="16"/>
+        <TextBlock Grid.Column="1" Text="{Binding StatusText}" Margin="12,0,0,0"
+                   VerticalAlignment="Center" MaxWidth="420" TextWrapping="Wrap"/>
+      </Grid>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="Rip selected" Command="{Binding RipCommand}"
+                IsEnabled="{Binding CanRip}" Classes="accent" Padding="16,8"/>
+        <Button Content="Cancel" Command="{Binding CancelCommand}"
+                IsEnabled="{Binding IsBusy}" Padding="16,8"/>
+        <Button Content="Clear log" Command="{Binding ClearLogCommand}" Padding="12,8"/>
+        <Button Content="Close" Click="OnCloseClick" Padding="16,8"/>
+      </StackPanel>
+    </StackPanel>
+
+    <Grid ColumnDefinitions="*,280" RowDefinitions="Auto,*,140">
+      <!-- Drive + metadata -->
+      <Border Grid.Column="0" Grid.Row="0" Padding="10" CornerRadius="6"
+              BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,8,8">
+        <StackPanel Spacing="6">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+            <TextBlock Text="Drive" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Drives}"
+                      SelectedItem="{Binding SelectedDrive}" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="models:CdDriveInfo">
+                  <TextBlock Text="{Binding DisplayName}"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Grid.Column="2" Content="Refresh" Command="{Binding RefreshDrivesCommand}"
+                    Margin="8,0,0,0" IsEnabled="{Binding !IsBusy}"/>
+            <Button Grid.Column="3" Content="Read TOC" Command="{Binding ReadTocCommand}"
+                    Margin="8,0,0,0" IsEnabled="{Binding CanReadToc}"/>
+          </Grid>
+          <TextBlock Text="{Binding TocSummary}" Opacity="0.8" FontSize="12"/>
+          <TextBlock FontFamily="Consolas,Courier New,monospace" FontSize="12" Opacity="0.85">
+            <Run Text="DiscID: "/><Run Text="{Binding DiscIdText}"/>
+          </TextBlock>
+          <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+            <TextBlock Text="Artist" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding Artist}"/>
+            <TextBlock Grid.Row="1" Text="Album" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Album}"/>
+            <TextBlock Grid.Row="2" Text="Year" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Year}"/>
+            <TextBlock Grid.Row="3" Text="Genre" VerticalAlignment="Center"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Genre}"/>
+          </Grid>
+          <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+            <Button Content="Lookup DiscID" Command="{Binding LookupDiscIdCommand}"
+                    IsEnabled="{Binding CanLookup}" Padding="12,6"/>
+            <Button Content="Lookup by name" Command="{Binding LookupByNameCommand}"
+                    IsEnabled="{Binding !IsBusy}" Padding="12,6"/>
+            <Button Content="Download cover" Command="{Binding DownloadCoverCommand}"
+                    IsEnabled="{Binding CanDownloadCover}" Padding="12,6"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Format / output -->
+      <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Padding="10" CornerRadius="6"
+              BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,0,8">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Output" FontWeight="SemiBold"/>
+          <TextBlock Text="Format"/>
+          <ComboBox ItemsSource="{Binding FormatOptions}" SelectedIndex="{Binding SelectedFormatIndex}"
+                    HorizontalAlignment="Stretch"/>
+          <TextBlock Text="Folder (not same-as-source — CDs have no folder)"/>
+          <TextBox Text="{Binding OutputFolder}" Watermark="Music library / last output folder" TextWrapping="Wrap"/>
+          <Button Content="Browse folder" Command="{Binding BrowseOutputCommand}" HorizontalAlignment="Stretch"/>
+          <TextBlock Text="Cover (optional)" Margin="0,8,0,0"/>
+          <TextBox Text="{Binding CoverPath}" Watermark="cover.jpg" TextWrapping="Wrap"/>
+          <Button Content="Browse cover" Command="{Binding BrowseCoverCommand}" HorizontalAlignment="Stretch"/>
+          <TextBlock Text="Tags come from MusicBrainz or the fields on the left (CDs have no source tags). PreserveSourceTags is ignored here."
+                     TextWrapping="Wrap" Opacity="0.7" FontSize="12" Margin="0,8,0,0"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Tracks -->
+      <Border Grid.Column="0" Grid.Row="1" Padding="8" CornerRadius="6"
+              BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,8,8">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
+            <TextBlock Text="Tracks" FontWeight="SemiBold" VerticalAlignment="Center"/>
+            <Button Content="Select all" Command="{Binding SelectAllCommand}" Padding="8,4"/>
+            <Button Content="Select none" Command="{Binding SelectNoneCommand}" Padding="8,4"/>
+          </StackPanel>
+          <ListBox ItemsSource="{Binding Tracks}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="models:CdRipTrackItem">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto" Margin="2">
+                  <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center"/>
+                  <TextBox Grid.Column="1" Text="{Binding Title}" Margin="8,0,8,0"/>
+                  <TextBlock Grid.Column="2" Text="{Binding LengthText}" Opacity="0.75"
+                             VerticalAlignment="Center" Margin="0,0,8,0" MinWidth="48"/>
+                  <TextBlock Grid.Column="3" Text="{Binding Status}" Opacity="0.7"
+                             VerticalAlignment="Center" MinWidth="72"/>
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+
+      <!-- Log -->
+      <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Padding="8" CornerRadius="6"
+              BorderBrush="#33FFFFFF" BorderThickness="1">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Log" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <TextBox Text="{Binding LogText}" IsReadOnly="True" AcceptsReturn="True"
+                   TextWrapping="Wrap" FontFamily="Consolas,Courier New,monospace" FontSize="12"
+                   VerticalContentAlignment="Top"/>
+        </DockPanel>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

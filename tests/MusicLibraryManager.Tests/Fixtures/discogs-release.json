@@ -1,0 +1,22 @@
+{
+  "id": 123456,
+  "title": "Nevermind",
+  "year": 1991,
+  "country": "US",
+  "genres": ["Rock"],
+  "styles": ["Grunge"],
+  "artists": [
+    { "name": "Nirvana", "join": "" }
+  ],
+  "formats": [
+    { "name": "CD", "qty": "1" }
+  ],
+  "labels": [
+    { "name": "DGC" }
+  ],
+  "tracklist": [
+    { "position": "1", "title": "Smells Like Teen Spirit", "duration": "5:01", "type_": "track" },
+    { "position": "2", "title": "In Bloom", "duration": "4:14", "type_": "track" },
+    { "position": "3", "title": "Come As You Are", "duration": "3:39", "type_": "track" }
+  ]
+}

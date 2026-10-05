@@ -1,0 +1,57 @@
+{
+  "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+  "title": "Nevermind",
+  "status": "Official",
+  "date": "1991-09-24",
+  "country": "US",
+  "artist-credit": [
+    {
+      "name": "Nirvana",
+      "artist": { "id": "11111111-1111-1111-1111-111111111111", "name": "Nirvana" },
+      "joinphrase": ""
+    }
+  ],
+  "release-group": {
+    "id": "22222222-2222-2222-2222-222222222222",
+    "title": "Nevermind",
+    "primary-type": "Album",
+    "first-release-date": "1991-09-24",
+    "tags": [
+      { "count": 10, "name": "grunge" },
+      { "count": 3, "name": "rock" }
+    ]
+  },
+  "tags": [
+    { "count": 2, "name": "alternative rock" }
+  ],
+  "media": [
+    {
+      "position": 1,
+      "format": "CD",
+      "track-count": 3,
+      "tracks": [
+        {
+          "id": "t1",
+          "position": 1,
+          "number": "1",
+          "title": "Smells Like Teen Spirit",
+          "length": 301000
+        },
+        {
+          "id": "t2",
+          "position": 2,
+          "number": "2",
+          "title": "In Bloom",
+          "length": 255000
+        },
+        {
+          "id": "t3",
+          "position": 3,
+          "number": "3",
+          "recording": { "title": "Come As You Are" },
+          "length": 219000
+        }
+      ]
+    }
+  ]
+}

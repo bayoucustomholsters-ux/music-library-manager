@@ -1,0 +1,185 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MusicLibraryManager.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="820"
+        x:Class="MusicLibraryManager.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Music Library Manager v5.1.0"
+        Width="1020" Height="860"
+        MinWidth="840" MinHeight="640"
+        DragDrop.AllowDrop="True">
+
+  <Design.DataContext>
+    <vm:MainViewModel />
+  </Design.DataContext>
+
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,12">
+      <TextBlock Text="Music Library Manager" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+      <TextBlock Text="v5.1.0 Phase 5.1" Opacity="0.6" VerticalAlignment="Center" Margin="8,0,0,0"/>
+      <Button Content="CD Ripper" Command="{Binding OpenCdRipperCommand}" Margin="16,0,0,0"/>
+      <Button Content="Duplicate Finder" Command="{Binding OpenDuplicateFinderCommand}" Margin="8,0,0,0"/>
+      <Button Content="Fill missing covers" Command="{Binding OpenBatchCoverFillCommand}" Margin="8,0,0,0"/>
+      <Button Content="Settings" Command="{Binding OpenSettingsCommand}" Margin="8,0,0,0"/>
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,12,0,0">
+      <TextBlock Text="{Binding FfmpegStatus}" FontSize="11" Opacity="0.7"/>
+      <TextBlock Text="{Binding WatchStatus}" FontSize="11" Opacity="0.75"/>
+      <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="18"/>
+        <TextBlock Grid.Column="1" Text="{Binding StatusText}" Margin="12,0,0,0" VerticalAlignment="Center" MinWidth="120"/>
+      </Grid>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Content="Split Album" Command="{Binding SplitAlbumCommand}" IsEnabled="{Binding !IsBusy}"
+                Classes="accent" Padding="16,8"/>
+        <Button Content="Run Batch" Command="{Binding RunBatchCommand}" IsEnabled="{Binding !IsBusy}" Padding="16,8"/>
+        <Button Content="Convert folder of tracks" Command="{Binding ConvertTracksFolderCommand}"
+                IsEnabled="{Binding !IsBusy}" Padding="16,8"/>
+        <Button Content="Cancel" Command="{Binding CancelCommand}" IsEnabled="{Binding IsBusy}" Padding="16,8"/>
+        <Button Content="Clear form" Command="{Binding ClearLogCommand}" Padding="16,8"/>
+      </StackPanel>
+    </StackPanel>
+
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,*,160" Margin="0">
+      <!-- Left: single album -->
+      <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Padding="12" CornerRadius="8"
+              Background="#22FFFFFF" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,6,0">
+        <ScrollViewer>
+          <StackPanel Spacing="8">
+            <TextBlock Text="Single Album" FontWeight="SemiBold" FontSize="16"/>
+            <TextBlock Text="Drag &amp; drop audio / CUE / cover / .txt here, or browse." Opacity="0.7" TextWrapping="Wrap"/>
+
+            <TextBlock Text="Audio file" Margin="0,8,0,0"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Text="{Binding AudioPath}" Watermark="MP3, FLAC, WAV, APE, M4A, WMA, AIFF, OGG..."/>
+              <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseAudioCommand}" Margin="8,0,0,0"/>
+            </Grid>
+
+            <TextBlock Text="CUE sheet (optional)"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Text="{Binding CuePath}" Watermark="album.cue"/>
+              <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseCueCommand}" Margin="8,0,0,0"/>
+            </Grid>
+
+            <TextBlock Text="Cover art (optional)"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Text="{Binding CoverPath}" Watermark="cover.jpg / .png"/>
+              <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseCoverCommand}" Margin="8,0,0,0"/>
+            </Grid>
+
+            <TextBlock Text="Track list .txt (optional)"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Text="{Binding TrackListPath}" Watermark="tracks.txt"/>
+              <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseTrackListCommand}" Margin="8,0,0,0"/>
+            </Grid>
+
+            <TextBlock Text="Metadata (CUE / MusicBrainz)" FontWeight="SemiBold" Margin="0,12,0,0"/>
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+              <TextBlock Text="Artist" VerticalAlignment="Center"/>
+              <TextBox Grid.Column="1" Text="{Binding Artist}"/>
+              <TextBlock Grid.Row="1" Text="Album" VerticalAlignment="Center"/>
+              <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Album}"/>
+              <TextBlock Grid.Row="2" Text="Year" VerticalAlignment="Center"/>
+              <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Year}"/>
+              <TextBlock Grid.Row="3" Text="Genre" VerticalAlignment="Center"/>
+              <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Genre}"/>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+              <Button Content="Lookup metadata" Command="{Binding LookupMetadataCommand}"
+                      IsEnabled="{Binding CanLookupMetadata}" Padding="12,6"/>
+              <Button Content="Identify with AcoustID" Command="{Binding IdentifyWithAcoustIdCommand}"
+                      IsEnabled="{Binding CanIdentifyWithAcoustId}" Padding="12,6"/>
+              <Button Content="Lookup on Discogs" Command="{Binding LookupDiscogsCommand}"
+                      IsEnabled="{Binding CanLookupDiscogs}" Padding="12,6"/>
+              <Button Content="Download cover" Command="{Binding DownloadCoverCommand}"
+                      IsEnabled="{Binding CanDownloadCover}" Padding="12,6"/>
+            </StackPanel>
+            <TextBlock Text="{Binding LookupStatus}" Opacity="0.7" FontSize="12" TextWrapping="Wrap"/>
+
+            <TextBlock Text="Output format" Margin="0,12,0,0"/>
+            <ComboBox ItemsSource="{Binding FormatOptions}" SelectedIndex="{Binding SelectedFormatIndex}" HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Output folder" Margin="0,8,0,0"/>
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBox Text="{Binding OutputFolder}" Watermark="Where to write Artist\Album (Year)\..."/>
+              <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseOutputCommand}" Margin="8,0,0,0"/>
+            </Grid>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+
+      <!-- Right top: batch -->
+      <Border Grid.Column="1" Grid.Row="0" Padding="12" CornerRadius="8"
+              Background="#22FFFFFF" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="6,0,0,6">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Batch Mode (albums)" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock Text="Folder of albums — auto-finds CUE, skips already processed when enabled."
+                     TextWrapping="Wrap" Opacity="0.7"/>
+          <TextBlock Text="Albums folder"/>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding BatchFolder}" Watermark="Folder containing album subfolders"/>
+            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseBatchFolderCommand}" Margin="8,0,0,0"/>
+          </Grid>
+          <Button Content="Fill missing covers…" Command="{Binding OpenBatchCoverFillCommand}"
+                  HorizontalAlignment="Left" Padding="12,6"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Right: convert tracks + watch -->
+      <Border Grid.Column="1" Grid.Row="1" Padding="12" CornerRadius="8"
+              Background="#22FFFFFF" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="6,0,0,6">
+        <StackPanel Spacing="8">
+          <TextBlock Text="Convert folder of tracks" FontWeight="SemiBold" FontSize="15"/>
+          <TextBlock Text="Each audio file is its own job (already-split tracks). Preserves source tags. Output: same folder or mirror under output root."
+                     TextWrapping="Wrap" Opacity="0.7"/>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding ConvertFolder}" Watermark="Folder of FLAC/WAV/MP3 tracks"/>
+            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseConvertFolderCommand}" Margin="8,0,0,0"/>
+          </Grid>
+
+          <TextBlock Text="Watch Folder" FontWeight="SemiBold" FontSize="15" Margin="0,8,0,0"/>
+          <TextBlock Text="Auto-split new album audio/CUE in this folder (and one level of subfolders) after settle delay."
+                     TextWrapping="Wrap" Opacity="0.7"/>
+          <Grid ColumnDefinitions="*,Auto">
+            <TextBox Text="{Binding WatchFolderPath}" Watermark="e.g. Albums To Split"/>
+            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseWatchFolderCommand}" Margin="8,0,0,0"/>
+          </Grid>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Start Watch" Command="{Binding StartWatchCommand}"
+                    IsEnabled="{Binding !IsWatchRunning}" Padding="12,6"/>
+            <Button Content="Stop Watch" Command="{Binding StopWatchCommand}"
+                    IsEnabled="{Binding IsWatchRunning}" Padding="12,6"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Column="1" Grid.Row="2" Padding="12" CornerRadius="8"
+              Background="#22FFFFFF" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="6,0,0,0">
+        <StackPanel Spacing="6">
+          <TextBlock Text="Layout" FontWeight="SemiBold"/>
+          <TextBlock Text="Artist\Album (Year)\01 - Song.ext" FontFamily="Consolas,Courier New,monospace" Opacity="0.85"/>
+          <TextBlock Text="Phase 5.1: Fill missing covers · CD Ripper · ALAC · AcoustID · Discogs · ReplayGain · Watch · Duplicates."
+                     TextWrapping="Wrap" Opacity="0.7" Margin="0,4,0,0"/>
+          <TextBlock Text="Later: Media Suite image &amp; PDF tools (stub / deferred) — see README."
+                     TextWrapping="Wrap" Opacity="0.5"/>
+        </StackPanel>
+      </Border>
+
+      <!-- Log -->
+      <Border Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Padding="8" CornerRadius="8"
+              Background="#18000000" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,8,0,0">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="Log" FontWeight="SemiBold" Margin="0,0,0,4"/>
+          <TextBox Text="{Binding LogText}" IsReadOnly="True" AcceptsReturn="True"
+                   TextWrapping="Wrap" FontFamily="Consolas,Courier New,monospace" FontSize="12"
+                   VerticalContentAlignment="Top"/>
+        </DockPanel>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

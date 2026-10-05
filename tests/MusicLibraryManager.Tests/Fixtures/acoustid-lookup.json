@@ -1,0 +1,37 @@
+{
+  "status": "ok",
+  "results": [
+    {
+      "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "score": 0.98,
+      "recordings": [
+        {
+          "id": "11111111-2222-3333-4444-555555555555",
+          "title": "Smells Like Teen Spirit",
+          "artists": [
+            { "id": "aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb", "name": "Nirvana", "joinphrase": "" }
+          ],
+          "releases": [
+            {
+              "id": "bbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+              "title": "Nevermind",
+              "date": "1991-09-24",
+              "country": "US",
+              "track_count": 12,
+              "mediums": [
+                { "track_count": 12 }
+              ]
+            },
+            {
+              "id": "cccccccc-dddd-eeee-ffff-000000000000",
+              "title": "Nevermind",
+              "date": "2011",
+              "country": "XE",
+              "track_count": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
